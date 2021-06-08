@@ -35,8 +35,8 @@ export default class Login {
   handleSubmitAdmin = e => {
     const user = {
       type: "Admin",
-      email: e.target.querySelector(`input[data-testid="employee-email-input"]`).value,
-      password: e.target.querySelector(`input[data-testid="employee-password-input"]`).value,
+      email: e.target.querySelector(`input[data-testid="admin-email-input"]`).value,
+      password: e.target.querySelector(`input[data-testid="admin-password-input"]`).value,
       status: "connected"
     }
     this.localStorage.setItem("user", JSON.stringify(user))
@@ -51,13 +51,14 @@ export default class Login {
 
   // not need to cover this function by tests
   checkIfUserExists = (user) => {
+    console.log(user);
     if (this.firestore) {
       this.firestore
       .user(user.email)
       .get()
       .then((doc) => {
         if (doc.exists) {
-          console.log(`User with ${user.email} exists`)
+          // console.log(`User with ${user.email} exists`)
           return true
         } else {
           return false
@@ -85,4 +86,4 @@ export default class Login {
       return null
     }
   }
-} 
+}
