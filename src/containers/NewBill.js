@@ -13,12 +13,19 @@ export default class NewBill {
     file.addEventListener("change", this.handleChangeFile)
     this.fileUrl = null
     this.fileName = null
+    this.document.querySelector(`input[data-testid="file"]`).accept = ".jpg, .jpeg, .png"
     new Logout({ document, localStorage, onNavigate })
   }
+
   handleChangeFile = e => {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    const fileName = file.name
+    // restrict file extension
+    if (file.type === "image/png" || file.type === "image/jpg" || file.type === "image/jpeg") {
+      this.document.querySelector(`input[data-testid="file"]`).value = fileName
+    }else{
+      this.document.querySelector(`input[data-testid="file"]`).value = null
+    }
     this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
@@ -29,6 +36,7 @@ export default class NewBill {
         this.fileName = fileName
       })
   }
+
   handleSubmit = e => {
     e.preventDefault()
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)

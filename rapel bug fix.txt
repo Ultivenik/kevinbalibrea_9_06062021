@@ -1,0 +1,31 @@
+1) BUG 1
+
+description:Le test Bills / les notes de frais s'affichent par ordre décroissant est passé au rouge.
+
+fichier du bug : views/billsUI.js
+
+cause: ligne 23, le map des datas renvoyaient un tableau non trié au niveau des dates en amont. 
+
+solution: utilisation de la fonction sort() avec en parametres la valeur de la variable "antiChrono" du fichier test Bills.js ligne 16
+
+
+2) BUG 2
+
+Description: Dans le rapport de test "Login, si un administrateur remplit correctement les champs du Login, 
+il devrait naviguer sur la page Dashboard", le test est passé au rouge (cf. copie d'écran).
+
+fichier du bug: containers/login.js
+
+cause: ligne 38 et 39 la valeur de la proprieté "email" et "password" etait la même que celle d'un user de type "employee"
+
+solution: changer la chaine de caractere du querySelector pour selectionner le bon champ dans l'interface. 
+`input[data-testid="admin-email-input"]` au lieu de `input[data-testid="employee-email-input"]` et
+`input[data-testid="admin-password-input"]` eu lieu de `input[data-testid="employee-password-input"]`
+
+3) BUG 3 (non fini)
+
+description:  J'arrive sur la page Bills, je clique sur l'icône "voir" pour consulter le justificatif : la modale s'ouvre, mais il n'y a pas d'image
+fichier du bug: containers/NewBill.js
+causes: une vaiable utilisait la fonction split() qui ne montrait que la derniere lettre du fichier.
+solutions:J'ai changé sa valeur en utilisant file.type de la premiere variable, ainsi qu'une condition indiquant que le champ
+n'accepte que les type de fichier jpeg jpg et png

@@ -51,7 +51,6 @@ export default class Login {
 
   // not need to cover this function by tests
   checkIfUserExists = (user) => {
-    console.log(user);
     if (this.firestore) {
       this.firestore
       .user(user.email)
@@ -80,7 +79,6 @@ export default class Login {
         type: user.type,
         name: user.email.split('@')[0] 
       })
-      .then(() => console.log(`User with ${user.email} is created`))
       .catch(error => error)
     } else {
       return null

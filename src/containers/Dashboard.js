@@ -8,7 +8,6 @@ import Logout from "./Logout.js"
 export const filteredBills = (data, status) => {
   return (data && data.length) ?
     data.filter(bill => {
-
       let selectCondition
 
       // in jest environment
@@ -95,7 +94,6 @@ export default class {
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
-      this.counter ++
     } else {
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
@@ -103,7 +101,6 @@ export default class {
         <div id="big-billed-icon"> ${BigBilledIcon} </div>
       `)
       $('.vertical-navbar').css({ height: '120vh' })
-      this.counter ++
     }
     $('#icon-eye-d').click(this.handleClickIconEye)
     $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
@@ -147,6 +144,7 @@ export default class {
 
     bills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+            // document.querySelector(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
     return bills
@@ -161,15 +159,16 @@ export default class {
       .get()
       .then(snapshot => {
         const bills = snapshot.docs
-        .map(doc => ({
+        .map(doc =>({
           id: doc.id,
           ...doc.data(),
           date: doc.data().date,
-          status: doc.data().status
+          status: doc.data().status,
+          fileName: doc.data().fileName,
+          fileUrl: doc.data().fileUrl
         }))
         return bills
       })
-      .catch(console.log)
     }
   }
     
@@ -180,7 +179,6 @@ export default class {
       .bill(bill.id)
       .update(bill)
       .then(bill => bill)
-      .catch(console.log)
     }
   }
 }
