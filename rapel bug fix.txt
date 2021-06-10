@@ -22,10 +22,31 @@ solution: changer la chaine de caractere du querySelector pour selectionner le b
 `input[data-testid="admin-email-input"]` au lieu de `input[data-testid="employee-email-input"]` et
 `input[data-testid="admin-password-input"]` eu lieu de `input[data-testid="employee-password-input"]`
 
-3) BUG 3 (non fini)
+3) BUG 3
 
-description:  J'arrive sur la page Bills, je clique sur l'icône "voir" pour consulter le justificatif : la modale s'ouvre, mais il n'y a pas d'image
+description:  J'arrive sur la page Bills, je clique sur l'icône "voir" pour consulter le justificatif : 
+la modale s'ouvre, mais il n'y a pas d'image
+
 fichier du bug: containers/NewBill.js
-causes: une vaiable utilisait la fonction split() qui ne montrait que la derniere lettre du fichier.
-solutions:J'ai changé sa valeur en utilisant file.type de la premiere variable, ainsi qu'une condition indiquant que le champ
-n'accepte que les type de fichier jpeg jpg et png
+
+causes: la fonction de gestion des fichiers ne prenait pas en charge une restriction d'extension de fichier avant 
+soumission du formulaire.
+ainsi, il etait possible de telecharger n'importe quel type de fichier et soumettre le formulaire, ce qui 
+a pour cause de creer un ticket ou la modale ne montre aucune vue d'image. 
+
+solutions:suppression des variables inutiles, création d'une variable "fileName" contenant le nom du fichier
+a telecharger et à afficher. Mise en place d'une condition de restriction d'extension de fichier
+mise en place d'une condition dans la fonction "handlesubmit" qui interomp celle ci au cas ou le fichier n'est pas
+correct.
+
+4) BUG 4
+
+description:  Je suis connecté en tant qu'administrateur RH, je déplie une liste de tickets (par exemple : statut "validé"), 
+je sélectionne un ticket, puis je déplie une seconde liste (par exemple : statut "refusé"), 
+je ne peux plus sélectionner un ticket de la première liste.
+
+fichier du bug: containers/Dashboard.js
+
+causes: pour selectionner les ticket le systeme utilise un compteur. si le compteur indique 0 on peut selectionner et afficher les tickets
+
+solutions: suppression des incrémentation du compteur

@@ -132,16 +132,13 @@ export default class {
     if (this.index === undefined || this.index !== index) this.index = index
     if (this.counter % 2 === 0) {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
-      $(`#status-bills-container${this.index}`)
-        .html(cards(filteredBills(bills, getStatus(this.index))))
-      this.counter ++
+      $(`#status-bills-container${this.index}`).html(cards(filteredBills(bills, getStatus(this.index))))
+      // this.counter ++
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
-      $(`#status-bills-container${this.index}`)
-        .html("")
-      this.counter ++
+      $(`#status-bills-container${this.index}`).html("")
+      // this.counter ++
     }
-
     bills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
             // document.querySelector(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
@@ -157,23 +154,22 @@ export default class {
       return this.firestore
       .bills()
       .get()
-      .then(snapshot => {
+      .then(snapshot =>{
         const bills = snapshot.docs
         .map(doc =>({
           id: doc.id,
-          ...doc.data(),
           date: doc.data().date,
           status: doc.data().status,
-          fileName: doc.data().fileName,
-          fileUrl: doc.data().fileUrl
+          ...doc.data(),
         }))
         return bills
       })
     }
   }
-    
+
   // not need to cover this function by tests
   updateBill = (bill) => {
+    console.log(bill);
     if (this.firestore) {
     return this.firestore
       .bill(bill.id)

@@ -10,36 +10,39 @@ export default class NewBill {
     const formNewBill = this.document.querySelector(`form[data-testid="form-new-bill"]`)
     formNewBill.addEventListener("submit", this.handleSubmit)
     const file = this.document.querySelector(`input[data-testid="file"]`)
+    file.accept = ".png, .jpg, .jpeg"
     file.addEventListener("change", this.handleChangeFile)
     this.fileUrl = null
     this.fileName = null
-    this.document.querySelector(`input[data-testid="file"]`).accept = ".jpg, .jpeg, .png"
     new Logout({ document, localStorage, onNavigate })
   }
 
   handleChangeFile = e => {
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const fileName = file.name
-    // restrict file extension
-    if (file.type === "image/png" || file.type === "image/jpg" || file.type === "image/jpeg") {
-      this.document.querySelector(`input[data-testid="file"]`).value = fileName
-    }else{
-      this.document.querySelector(`input[data-testid="file"]`).value = null
-    }
+    const fileObj = this.document.querySelector(`input[data-testid="file"]`).files[0]
+    const fileName = fileObj.name
     this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
-      .put(file)
+      .put(fileObj)
       .then(snapshot => snapshot.ref.getDownloadURL())
       .then(url => {
-        this.fileUrl = url
-        this.fileName = fileName
+        // restrict file extension
+        if (fileObj.type === "image/png" || fileObj.type === "image/jpg" || fileObj.type === "image/jpeg") {
+          this.fileUrl = url
+          this.fileName = fileName
+        }else{
+          this.fileUrl = "none"
+          this.fileName = "none"
+        }
       })
   }
 
   handleSubmit = e => {
     e.preventDefault()
-    console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
+    if (this.fileUrl === "none" ||
+        this.fileName === "none") {
+      return
+    }
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
