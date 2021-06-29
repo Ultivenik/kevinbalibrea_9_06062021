@@ -7,14 +7,14 @@ export default class NewBill {
     this.document = document
     this.onNavigate = onNavigate
     this.firestore = firestore
-    const formNewBill = this.document.querySelector(`form[data-testid="form-new-bill"]`)
-    formNewBill.addEventListener("submit", this.handleSubmit)
-    const file = this.document.querySelector(`input[data-testid="file"]`)
-    file.accept = ".png, .jpg, .jpeg"
-    file.addEventListener("change", this.handleChangeFile)
     this.fileUrl = null
     this.fileName = null
     new Logout({ document, localStorage, onNavigate })
+    const formNewBill = this.document.querySelector(`form[data-testid="form-new-bill"]`)
+    formNewBill.addEventListener("submit", this.handleSubmit)
+    const file = this.document.querySelector(`input[data-testid="file"]`)
+    file.addEventListener("change", this.handleChangeFile)
+    file.accept = ".png, .jpg, .jpeg"
   }
 
   handleChangeFile = e => {

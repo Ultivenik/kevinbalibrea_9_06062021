@@ -7,13 +7,13 @@ export default class {
     this.document = document
     this.onNavigate = onNavigate
     this.firestore = firestore
+    new Logout({ document, localStorage, onNavigate })
     const buttonNewBill = document.querySelector(`button[data-testid="btn-new-bill"]`)
     if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
     const iconEye = document.querySelectorAll(`div[data-testid="icon-eye"]`)
     if (iconEye) iconEye.forEach(icon => {
       icon.addEventListener('click', (e) => this.handleClickIconEye(icon))
     })
-    new Logout({ document, localStorage, onNavigate })
   }
 
   handleClickNewBill = e => {
