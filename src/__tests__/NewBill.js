@@ -8,17 +8,11 @@ import firebase from "../__mocks__/firebase";
 import { ROUTES, ROUTES_PATH } from "../constants/routes";
 
 describe("Given I am connected as an employee", () => {
-  describe("When I am on NewBill Page", () => {1
+  describe("When I am on NewBill Page", () => {
     test("Then we add a new image file ", () => {
-      //  Object.defineProperty(window, "localStorage", {
-      //   value: localStorageMock,
-      // })
-      // window.localStorage.setItem(
-      //   "user",
-      //   JSON.stringify({
-      //     type: "Employee",
-      //   })
-      // )
+      NewBill.handleChangeFile = jest.fn().mockImplementation(()=>{undefined}).mockName("handleChangeFile")
+      const newBillUI = NewBillUI()
+      document.body.innerHTML = newBillUI
       const newBill = new NewBill({
         data : [],
         document: window.document,
@@ -27,14 +21,10 @@ describe("Given I am connected as an employee", () => {
         fileUrl: null,
         fileName: null
       })
-      const newBillUI = NewBillUI()
-      document.body.innerHTML = newBillUI
-      //to-do write assertion
       const Input = document.querySelector(`input[data-testid="file"]`)
-      const handleChange = jest.fn(newBill.handleChangeFile)
-      fireEvent.change(Input, handleChange)
-      Input.addEventListener("change", handleChange)
-      expect(handleChange).toHaveBeenCalled()
+      // fireEvent.change(Input)
+      Input.addEventListener("change", NewBill.handleChangeFile)
+      expect(NewBill.handleChangeFile).toHaveBeenCalled()
     })
   })
 })
@@ -42,15 +32,8 @@ describe("Given I am connected as an employee", () => {
 describe("Given I am connected as an employee", ()=>{
   describe("When I am on NewBill Page and submit the form", ()=>{
     test("then create a newBill", ()=>{
-      //  Object.defineProperty(window, "localStorage", {
-      //   value: localStorageMock,
-      // })
-      // window.localStorage.setItem(
-      //   "user",
-      //   JSON.stringify({
-      //     type: "Employee",
-      //   })
-      // )
+      const newBillUI = NewBillUI()
+      document.body.innerHTML = newBillUI
       const newBill = new NewBill({
         data : [],
         document: window.document,
@@ -62,11 +45,11 @@ describe("Given I am connected as an employee", ()=>{
       if (newBill.fileName === "invalid") {
         return
       }
-      const newBillUI = NewBillUI()
-      document.body.innerHTML = newBillUI
+    
       const button = screen.getByTestId("form-new-bill")
       const handleSubmit = jest.fn(newBill.handleSubmit)
-      button.addEventListener("submit", handleSubmit)
+      // button.addEventListener("submit", handleSubmit)
+      fireEvent.submit(button, handleSubmit)
       expect(handleSubmit).toHaveBeenCalled()
       expect(screen.getAllByText("Envoyer une note de frais")).toBeTruthy()
     })

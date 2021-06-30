@@ -17,9 +17,9 @@ export default class NewBill {
     file.accept = ".png, .jpg, .jpeg"
   }
 
-  handleChangeFile = e => {
+  handleChangeFile = () => {
     const fileObj = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const fileName = fileObj.name
+    const fileName = fileObj ? fileObj.name : ""
     this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
