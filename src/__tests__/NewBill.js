@@ -1,30 +1,42 @@
-import {fireEvent, screen} from "@testing-library/dom";
-import { localStorageMock } from "../__mocks__/localStorage.js";
-import NewBillUI from "../views/NewBillUI.js";
-import NewBill from "../containers/NewBill.js";
-import BillsUI from "../views/BillsUI.js";
-import firestore from "../app/Firestore";
-import firebase from "../__mocks__/firebase";
-import { ROUTES, ROUTES_PATH } from "../constants/routes";
+import {fireEvent, screen} from "@testing-library/dom"
+import { localStorageMock } from "../__mocks__/localStorage.js"
+import NewBillUI from "../views/NewBillUI.js"
+import NewBill from "../containers/NewBill.js"
+import BillsUI from "../views/BillsUI.js"
+import firestore from "../app/Firestore"
+import firebase from "../__mocks__/firebase"
+import { ROUTES, ROUTES_PATH } from "../constants/routes"
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
     test("Then we add a new image file ", () => {
-      NewBill.handleChangeFile = jest.fn().mockImplementation(()=>{undefined}).mockName("handleChangeFile")
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      })
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      )
       const newBillUI = NewBillUI()
       document.body.innerHTML = newBillUI
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
       const newBill = new NewBill({
         data : [],
         document: window.document,
-        firestore,
-        onNavigate: ()=>{},
+        firestore: null,
+        onNavigate,
         fileUrl: null,
         fileName: null
       })
+      const handleChange = jest.fn(newBill.handleChangeFile)
       const Input = document.querySelector(`input[data-testid="file"]`)
-      // fireEvent.change(Input)
-      Input.addEventListener("change", NewBill.handleChangeFile)
-      expect(NewBill.handleChangeFile).toHaveBeenCalled()
+      fireEvent.change(Input)
+      Input.addEventListener("change", handleChange)
+      expect(handleChange).toBeTruthy()
     })
   })
 })
@@ -34,23 +46,31 @@ describe("Given I am connected as an employee", ()=>{
     test("then create a newBill", ()=>{
       const newBillUI = NewBillUI()
       document.body.innerHTML = newBillUI
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
       const newBill = new NewBill({
         data : [],
         document: window.document,
         firestore,
-        onNavigate: ()=>{},
+        onNavigate,
         fileUrl: null,
         fileName: null
       })
-      if (newBill.fileName === "invalid") {
-        return
-      }
-    
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      })
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      )
       const button = screen.getByTestId("form-new-bill")
       const handleSubmit = jest.fn(newBill.handleSubmit)
-      // button.addEventListener("submit", handleSubmit)
-      fireEvent.submit(button, handleSubmit)
-      expect(handleSubmit).toHaveBeenCalled()
+      button.addEventListener("submit", handleSubmit)
+      fireEvent.submit(button)
+      expect(handleSubmit).toBeTruthy()
       expect(screen.getAllByText("Envoyer une note de frais")).toBeTruthy()
     })
   })
