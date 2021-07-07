@@ -41,6 +41,7 @@ export default class NewBill {
     e.preventDefault()
     if (this.fileUrl === "none" ||
         this.fileName === "none") {
+      console.log('La chaine de caracetere')
       return
     }
     const email = JSON.parse(localStorage.getItem("user")).email

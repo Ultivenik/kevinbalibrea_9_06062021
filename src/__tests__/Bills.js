@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/dom'
+import { fireEvent, screen, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import BillsUI from "../views/BillsUI.js";
@@ -24,9 +24,12 @@ describe("Given I am connected as an employee", () => {
           type: "Employee",
         })
       )
+      const onNavigate = path => {
+        document.body.innerHTML = ROUTES({path})
+      }
       const billUi = BillsUI({data: []})
       document.body.innerHTML = billUi
-      const bill = new Bills({data : bills, document: window.document, onNavigate: ()=>{}})
+      const bill = new Bills({data : bills, document: window.document, onNavigate})
       const handleCLickBill = jest.fn(bill.handleClickNewBill)
       const handleCLickEye = jest.fn(bill.handleClickIconEye)
 
@@ -34,11 +37,16 @@ describe("Given I am connected as an employee", () => {
       document.querySelectorAll(`div[data-testid="icon-eye"]`).forEach(icon =>{
         icon.click(handleCLickEye)
       })
+      expect(handleCLickBill).toBeTruthy()
+      expect(handleCLickEye).toBeTruthy()
     })
 
     test("Then bill icon in vertical layout should be highlighted", () => {
       const html = BillsUI({ data: []})
       document.body.innerHTML = html
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      })
       window.localStorage.setItem("user", JSON.stringify({
         type: "Employee",
         value: localStorageMock
@@ -64,7 +72,7 @@ describe("Given I am connected as an employee", () => {
   })
 
   describe("Given we are on bill page as Employee", ()=>{
-    describe("when we click on NewBill button", ()=>{
+    describe("when billUi is displayed", ()=>{
       test("then last bills are displayed", ()=>{
         Object.defineProperty(window, "localStorage", {
           value: localStorageMock,
@@ -75,17 +83,25 @@ describe("Given I am connected as an employee", () => {
             type: "Employee",
           })
         )
+        const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
         const firestore = null
-        const billUi = BillsUI({data: []})
+        const bill = new Bills({data : bills, document: window.document, onNavigate, firestore, localStorage: window.localStorage})
+        bill.handleClickIconEye = jest.fn()
+        bill.fileUrl = "fake url"
+        const billUi = BillsUI({data: [bill]})
         document.body.innerHTML = billUi
-        const bill = new Bills({data : bills, document: window.document, onNavigate: ()=>{}, firestore, localStorage: window.localStorage})
-        const navigate = (pathName) =>{
-          return ROUTES({pathName})
-        }
-        document.innerHTML = navigate()
-        const handleCLickBill = jest.fn(bill.handleClickNewBill)
-        screen.getByTestId("btn-new-bill").click(handleCLickBill)
-        expect(screen.getAllByText("Nouvelle note de frais")).not.toBeNull()
+        // const handleClickIconEye = jest.fn(bill.handleClickIconEye)
+        // const button = document.querySelector(`button[data-testid="btn-new-bill"]`)
+        const button = screen.getByTestId("icon-eye")
+        // button.click(bill.handleClickIconEye)
+        fireEvent.click(button)
+        expect(bill.handleClickIconEye.mock.calls.length).toBe(1)
+        waitFor(()=>{})
+        // button.click(handleCLickBill)
+        // expect(screen.getAllByText("Nouvelle note de frais")).toBeTruthy()
+        // expect(handleCLickBill).toBeTruthy()
       })
     })
   })
@@ -114,10 +130,6 @@ describe("Given I am connected as an employee", () => {
       document.getElementById("eye").click()
       expect(document.getElementById("modaleFile")).not.toBeNull()
       expect(document.getElementById("exampleModalLongTitle").textContent).toEqual("Justificatif")
-      const navigate = (pathName) =>{
-        return ROUTES({pathName})
-      }
-      document.innerHTML = navigate()
     })
   })
 
