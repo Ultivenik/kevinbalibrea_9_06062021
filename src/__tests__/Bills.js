@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/dom'
+import { fireEvent, screen, waitFor, queryHelpers } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import BillsUI from "../views/BillsUI.js";
@@ -73,7 +73,7 @@ describe("Given I am connected as an employee", () => {
 
   describe("Given we are on bill page as Employee", ()=>{
     describe("when billUi is displayed", ()=>{
-      test("then last bills are displayed", ()=>{
+      test("then last bills are displayed", async ()=>{
         Object.defineProperty(window, "localStorage", {
           value: localStorageMock,
         })
@@ -97,8 +97,11 @@ describe("Given I am connected as an employee", () => {
         const button = screen.getByTestId("icon-eye")
         // button.click(bill.handleClickIconEye)
         fireEvent.click(button)
-        expect(bill.handleClickIconEye.mock.calls.length).toBe(1)
-        waitFor(()=>{})
+        await waitFor(()=>{
+          expect(bill.handleClickIconEye.mock.calls.length).toBe(1)
+          // expect(queryHelpers.queryAllByAttribute("data-bill-url", screen.getByRole("image"))).toEqual("fake url")
+
+        })
         // button.click(handleCLickBill)
         // expect(screen.getAllByText("Nouvelle note de frais")).toBeTruthy()
         // expect(handleCLickBill).toBeTruthy()
