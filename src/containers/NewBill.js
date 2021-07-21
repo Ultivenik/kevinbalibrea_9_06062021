@@ -20,6 +20,7 @@ export default class NewBill {
   handleChangeFile = () => {
     const fileObj = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const fileName = fileObj ? fileObj.name : ""
+    /* istanbul ignore next */
     this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
@@ -41,7 +42,6 @@ export default class NewBill {
     e.preventDefault()
     if (this.fileUrl === "none" ||
         this.fileName === "none") {
-      console.log('La chaine de caracetere')
       return
     }
     const email = JSON.parse(localStorage.getItem("user")).email
@@ -63,6 +63,7 @@ export default class NewBill {
   }
 
   // not need to cover this function by tests
+  /* istanbul ignore next */
   createBill = (bill) => {
     if (this.firestore) {
       this.firestore
