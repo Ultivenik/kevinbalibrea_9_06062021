@@ -1,9 +1,9 @@
+import firebase from "../__mocks__/firebase.js"
 import {fireEvent, screen} from "@testing-library/dom"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import NewBillUI from "../views/NewBillUI.js"
 import NewBill from "../containers/NewBill.js"
-import { ROUTES, ROUTES_PATH } from "../constants/routes"
-import firebase from "../__mocks__/firebase.js"
+import BillsUI from "../views/BillsUI.js";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
@@ -119,43 +119,43 @@ describe("Given I am connected as an employee", ()=>{
 describe("Given I am a user connected as Employee", () => {
   describe("When I create a new bill", () => {
     test("Add bill to mock API POST", async () => {
-      const getSpyPost = jest.spyOn(firebase, "post");
+      const getSpyPost = jest.spyOn(firebase, "post")
       const newBill = {
-        id: "eoKIpYhECmaZAGRrHjaC",
-        status: "refused",
-        pct: 10,
-        amount: 500,
-        email: "john@doe.com",
-        name: "Facture 236",
-        vat: "60",
-        fileName: "preview-facture-free-201903-pdf-1.jpg",
-        date: "2021-03-13",
-        commentAdmin: "à valider",
-        commentary: "A déduire",
-        type: "Restaurants et bars",
-        fileUrl: "https://saving.com",
-      };
-      const bills = await firebase.post(newBill);
-      expect(getSpyPost).toHaveBeenCalledTimes(1);
-      expect(bills.data.length).toBe(5);
-    });
+        "id": "qcCK3SlzCmvZAKRmHjaC",
+        "status": "refused",
+        "pct": 20,
+        "amount": 200,
+        "email": "a@a",
+        "name": "test2",
+        "vat": "",
+        "fileName": "preview-facture-free-201801-pdf-1.jpg",
+        "date": "2012-02-02",
+        "commentAdmin": "pas la bonne facture",
+        "commentary": "test2",
+        "type": "Restaurants et bars",
+        "fileUrl": "https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=4df6ed2c-12c8-42a2-b013-346c1346f732"
+      }
+      const bills = await firebase.post(newBill)
+      expect(getSpyPost).toHaveBeenCalledTimes(1)
+      expect(bills.data.length).toBe(5)
+    })
     test("Add bill to API and fails with 404 message error", async () => {
       firebase.post.mockImplementationOnce(() =>
         Promise.reject(new Error("Erreur 404"))
-      );
-      const html = BillsUI({ error: "Erreur 404" });
-      document.body.innerHTML = html;
-      const message = await screen.getByText(/Erreur 404/);
-      expect(message).toBeTruthy();
-    });
+      )
+      const html = BillsUI({ error: "Erreur 404" })
+      document.body.innerHTML = html
+      const message = await screen.getByText(/Erreur 404/)
+      expect(message).toBeTruthy()
+    })
     test("Add bill to API and fails with 500 message error", async () => {
       firebase.post.mockImplementationOnce(() =>
         Promise.reject(new Error("Erreur 404"))
-      );
-      const html = BillsUI({ error: "Erreur 500" });
-      document.body.innerHTML = html;
-      const message = await screen.getByText(/Erreur 500/);
-      expect(message).toBeTruthy();
-    });
-  });
-});
+      )
+      const html = BillsUI({ error: "Erreur 500" })
+      document.body.innerHTML = html
+      const message = await screen.getByText(/Erreur 500/)
+      expect(message).toBeTruthy()
+    })
+  })
+})

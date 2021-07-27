@@ -166,7 +166,6 @@ export default class {
 
   // not need to cover this function by tests
   updateBill = (bill) => {
-    console.log(bill);
     if (this.firestore) {
     return this.firestore
       .bill(bill.id)

@@ -92,19 +92,8 @@ describe("Given I am connected as an employee", () => {
         bill.fileUrl = "fake url"
         const billUi = BillsUI({data: [bill]})
         document.body.innerHTML = billUi
-        // const handleClickIconEye = jest.fn(bill.handleClickIconEye)
-        // const button = document.querySelector(`button[data-testid="btn-new-bill"]`)
         const button = screen.getByTestId("icon-eye")
-        // button.click(bill.handleClickIconEye)
         fireEvent.click(button)
-        await waitFor(()=>{
-          // expect(bill.handleClickIconEye.mock.calls.length).toBe(1)
-          // expect(queryHelpers.queryAllByAttribute("data-bill-url", screen.getByRole("image"))).toEqual("fake url")
-
-        })
-        // button.click(handleCLickBill)
-        // expect(screen.getAllByText("Nouvelle note de frais")).toBeTruthy()
-        // expect(handleCLickBill).toBeTruthy()
       })
       window.$ =  jest.fn().mockImplementation(() => {
         return {
