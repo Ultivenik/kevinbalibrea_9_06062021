@@ -105,7 +105,7 @@ describe("Given I am connected as an employee", () => {
           })
         }
       })
-      test("Handle click", () => {
+      test("then button to add new bill is functionnal", () => {
         const html = BillsUI({ data: bills })
         document.body.innerHTML = html
         const onNavigate = jest.fn()
