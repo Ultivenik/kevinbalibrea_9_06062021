@@ -1,15 +1,11 @@
-import { fireEvent, screen, waitFor, queryHelpers } from '@testing-library/dom'
+import { fireEvent, screen} from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
-import { ROUTES, ROUTES_PATH } from "../constants/routes";
-import Router from "../app/Router";
-import Bills, {handleClickNewBill, handleClickIconEye} from "../containers/Bills.js";
-import userEvent from "@testing-library/user-event";
+import { ROUTES} from "../constants/routes";
+import Bills from "../containers/Bills.js";
 import firebase from "../__mocks__/firebase";
-import Firestore from "../app/Firestore";
-import path from 'path/posix';
 
 
 describe("Given I am connected as an employee", () => {
