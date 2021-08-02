@@ -121,14 +121,6 @@ describe("Given I am connected as an employee", () => {
     })
   })
 
-  describe('when data is loading', () => {
-    test('then loading component should be displayed', () => {
-      const html = BillsUI({ data: bills, loading: true })
-      document.body.innerHTML = html
-      expect(document.getElementById("loading")).not.toBeNull()
-    })
-  })
-
   describe('when i click on the eye icon', () => {
     test('then open a modal box', () => {
       Object.defineProperty(window, "localStorage", {
